@@ -16,7 +16,7 @@ spec:
     - databases:
         - hippo
       name: hippo
-      options: LOGIN
+      options: SUPERUSER
   postgresVersion: 17
   postGISVersion: '3.4'
   shutdown: false

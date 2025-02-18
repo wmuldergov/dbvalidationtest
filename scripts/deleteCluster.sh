@@ -1,1 +1,0 @@
-oc delete postgrescluster hippo

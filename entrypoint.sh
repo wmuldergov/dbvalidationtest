@@ -8,11 +8,33 @@ create_cluster() {
     echo "Cluster created."
 }
 
+# Function to get the PostgreSQL cluster details
+get_clusterVariables() {
+    secretName="hippo-pguser-hippo"
+
+    host=$(oc get secret $secretName -o jsonpath='{.data.host}' | base64 -d)
+    port=$(oc get secret $secretName -o jsonpath='{.data.port}' | base64 -d)
+    user=$(oc get secret $secretName -o jsonpath='{.data.user}' | base64 -d)
+    password=$(oc get secret $secretName -o jsonpath='{.data.password}' | base64 -d)
+    dbname=$(oc get secret $secretName -o jsonpath='{.data.dbname}' | base64 -d)
+}
+
+# Prep Cluster
+prep_cluster() {
+    echo "Prepping Cluster with Sample Data..."
+    psql -h $host -p $port -U $user -d $dbname -f scripts/prepCluster.sql
+}
+
+
 # Function to validate the PostgreSQL cluster
 validate_cluster() {
     echo "Validating PostgreSQL cluster..."
-    # You can customize the validation logic here. For example:
-    oc get postgrescluster
+    row_count=$(psql -h $host -p $port -U $user -d $dbname -t -c "SELECT COUNT(*) FROM cars;")
+    if [ "$row_count" -eq 1 ]; then
+    echo "Exactly 1 row returned"
+    else
+    echo "Row count is not 1"
+    fi
     echo "Cluster validation complete."
 }
 
@@ -26,9 +48,11 @@ delete_cluster() {
 # Ask the user for action
 echo "Please select an action:"
 echo "1. Create PostgreSQL Cluster"
-echo "2. Validate PostgreSQL Cluster"
-echo "3. Delete PostgreSQL Cluster"
-echo "4. Exit"
+echo "2. Get PostgreSQL Cluster Variables"
+echo "3. Prep Cluster"
+echo "4. Validate PostgreSQL Cluster"
+echo "5. Delete PostgreSQL Cluster"
+echo "6. Exit"
 
 while true; do
     read -p "Enter the number of your choice: " choice
@@ -37,17 +61,23 @@ while true; do
             create_cluster
             ;;
         2)
-            validate_cluster
+            get_clusterVariables
             ;;
         3)
+            prep_cluster
+            ;;
+        5)
+            validate_cluster
+            ;;
+        5)
             delete_cluster
             ;;
-        4)
+        6)
             echo "Exiting..."
             exit 0
             ;;
         *)
-            echo "Invalid choice, please select 1, 2, 3, or 4."
+            echo "Invalid choice, please select 1, 2, 3, 4, 5 or 6."
             ;;
     esac
 done
