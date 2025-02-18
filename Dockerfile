@@ -10,7 +10,7 @@ RUN apk add --no-cache \
     tar \
     libc6-compat \
     gzip \
-    netcat  # Install netcat for serving HTTP health checks
+    netcat-openbsd
 
 # Download and install oc
 ARG OC_MAJORVERSION=4
