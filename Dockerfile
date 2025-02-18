@@ -25,9 +25,13 @@ ENV KUBECONFIG=/tmp/.kube/config
 # Verify installation
 RUN oc version && psql --version
 
+# Copy the scripts and db folder
+COPY db /db
+COPY scripts /scripts
+
 # Copy entrypoint script and make it executable
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Set the entrypoint to the entrypoint.sh script
-ENTRYPOINT ["/entrypoint.sh"]
+# Set the entrypoint to run indefinitely
+ENTRYPOINT ["tail", "-f", "/dev/null"]
