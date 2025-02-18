@@ -25,12 +25,9 @@ ENV KUBECONFIG=/tmp/.kube/config
 # Verify installation
 RUN oc version && psql --version
 
-# Copy database configuration and script files
-COPY db /db
-COPY scripts /scripts
+# Copy entrypoint script and make it executable
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Make sure the script is executable
-RUN chmod +x /scripts/createValidateDB.sh
-
-# Apply the PostgreSQL cluster YAML configuration and start a long-running process
-CMD ["sh", "-c", "oc apply -f /db/postgrescluster.yaml && tail -f /dev/null"]
+# Set the entrypoint to the entrypoint.sh script
+ENTRYPOINT ["/entrypoint.sh"]
