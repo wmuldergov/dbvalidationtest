@@ -9,9 +9,10 @@ RUN apk add --no-cache \
     openssh-client \
     tar \
     libc6-compat \
-    gzip
+    gzip \
+    netcat  # Install netcat for serving HTTP health checks
 
-# Download and install oc (replace with the correct version and architecture)
+# Download and install oc
 ARG OC_MAJORVERSION=4
 ARG OC_VERSION=4.17 
 
@@ -33,5 +34,12 @@ COPY scripts /scripts
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# Copy entrypoint script and make it executable
+COPY testingScript.sh /testingScript.sh
+RUN chmod +x /testingScript.sh
+
 # Set the entrypoint to run indefinitely
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+# Set the entrypoint to run the script
+ENTRYPOINT ["/entrypoint.sh"]
