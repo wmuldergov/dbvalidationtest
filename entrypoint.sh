@@ -1,18 +1,24 @@
 #!/bin/bash
 
-# Run PostgreSQL query and get the row count
-row_count=0
+# Define metrics file path
+METRICS_FILE="/tmp/metrics"
 
-# Serve metrics over HTTP
-cat << EOF > /metrics
+# Ensure the script runs indefinitely and updates the metrics file periodically
+while true; do
+  # Run PostgreSQL query and get the row count
+  row_count=0
+
+  # Write the metric to a file
+  cat << EOF > "$METRICS_FILE"
 # HELP cars_row_count Total number of rows in the 'cars' table.
 # TYPE cars_row_count gauge
 cars_row_count $row_count
 EOF
 
-# Start a simple HTTP server to expose metrics
-while true; do
+  # Serve metrics over HTTP using netcat
   echo "Serving metrics at http://localhost:8080/metrics"
-  cat /metrics | nc -l -p 8080 -q 1
-  sleep 5
+  while true; do cat "$METRICS_FILE" | nc -l -p 8080 -q 1; done
+
+  # Sleep before updating again (optional, adjust as needed)
+  sleep 10
 done
