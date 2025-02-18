@@ -20,6 +20,6 @@ RUN curl -L "https://mirror.openshift.com/pub/openshift-v${OC_MAJORVERSION}/amd6
   && chmod +x /usr/local/bin/oc
 
 # Verify installation
-RUN psql --version
+RUN oc version && psql --version
 
 CMD ["/bin/sh"]
