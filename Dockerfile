@@ -9,8 +9,7 @@ RUN apk add --no-cache \
     openssh-client \
     tar \
     libc6-compat \
-    gzip \
-    python3  
+    gzip
 
 # Download and install oc
 ARG OC_MAJORVERSION=4
@@ -39,7 +38,5 @@ COPY testingScript.sh /testingScript.sh
 RUN chmod +x /testingScript.sh
 
 # Set the entrypoint to run indefinitely
-# ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 
-# Set the entrypoint to run the script
-ENTRYPOINT ["/entrypoint.sh"]
