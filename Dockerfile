@@ -19,7 +19,17 @@ RUN curl -L "https://mirror.openshift.com/pub/openshift-v${OC_MAJORVERSION}/amd6
   | tar -xzf - -C /usr/local/bin \
   && chmod +x /usr/local/bin/oc
 
+# Set the KUBECONFIG environment variable to use /tmp/.kube/config
+ENV KUBECONFIG=/tmp/.kube/config
+
 # Verify installation
 RUN oc version && psql --version
+
+# Copy database configuration and script files
+COPY db /db
+COPY scripts /scripts
+
+# Make sure the script is executable
+RUN chmod +x /scripts/createValidateDB.sh
 
 CMD ["/bin/sh"]
