@@ -30,10 +30,6 @@ COPY db /db
 COPY scripts /scripts
 
 # Copy entrypoint script and make it executable
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Copy entrypoint script and make it executable
 COPY testingScript.sh /testingScript.sh
 RUN chmod +x /testingScript.sh
 
