@@ -32,4 +32,5 @@ COPY scripts /scripts
 # Make sure the script is executable
 RUN chmod +x /scripts/createValidateDB.sh
 
-CMD ["/bin/sh"]
+# Apply the PostgreSQL cluster YAML configuration and start a long-running process
+CMD ["sh", "-c", "oc apply -f /db/postgrescluster.yaml && tail -f /dev/null"]
