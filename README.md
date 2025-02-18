@@ -2,6 +2,12 @@
 
 This is a repo to test out validating a CrunchyDB backup. This is a work in progress.
 
+High Level process
+1. Create a postgrescluster object from a backup
+1. Run some validation scripts against the DB
+1. Expose the output somewhere (thinking to a /metrics endpoint so sysdig can scrape it and notifications can be setup in sysdig)
+1. Tear down the postgrescluster
+
 
 ## Initial Setup in OpenShift
 To quickly get you started in a new namespace, follow these steps. 

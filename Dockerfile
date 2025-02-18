@@ -10,7 +10,7 @@ RUN apk add --no-cache \
     tar \
     libc6-compat \
     gzip \
-    netcat-openbsd
+    python3  
 
 # Download and install oc
 ARG OC_MAJORVERSION=4
